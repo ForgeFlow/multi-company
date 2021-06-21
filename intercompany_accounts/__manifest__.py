@@ -6,7 +6,7 @@
     'summary': 'Change the income and COGS accounts in intercompany transactions',
     'author': 'ForgeFlow S.L., Odoo Community Association (OCA)',
     'license': 'LGPL-3',
-    'depends': ['sale_stock'],
+    'depends': ['sale_stock', 'account'],
     "data": [
         "views/product_view.xml",
     ],

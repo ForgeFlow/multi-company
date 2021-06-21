@@ -8,11 +8,11 @@ class ProductTemplate(models.Model):
         comodel_name="account.account",
         company_dependent=True,
         string="Income Intercompany Account",
-        help="Keep this field empty to use the default value from the product category."
+        help="Income account used for intercompany transactions."
     )
     property_account_expense_intercompany = fields.Many2one(
         comodel_name="account.account",
         company_dependent=True,
         string="Expense Intercompany Account",
-        help="Keep this field empty to use the default value from the product category."
+        help="Expense account used for intercompany transactions."
     )
