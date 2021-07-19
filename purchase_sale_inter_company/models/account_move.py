@@ -11,7 +11,8 @@ class AccountMove(models.Model):
 
     def _inter_company_create_invoice(self, dest_company):
         res = super()._inter_company_create_invoice(dest_company)
-        if res["dest_invoice"].type == "in_invoice":
+        dest_inv_type = self._get_destination_invoice_type()
+        if dest_inv_type == "in_invoice":
             # Link intercompany purchase order with intercompany invoice
             self._link_invoice_purchase(res["dest_invoice"])
         return res
