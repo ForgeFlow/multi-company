@@ -17,3 +17,18 @@ class AccountInvoice(models.Model):
                 if item["account_id"] == accounts["expense"].id:
                     item["account_id"] = product_level.id or categ.id
         return res
+
+    def _prepare_invoice_line_from_po_line(self, line):
+        data = super(AccountInvoice, self)._prepare_invoice_line_from_po_line(line)
+        is_intercompany = self.env['res.company'].search([(
+            'partner_id', '=', self.partner_id.id,
+        )])
+
+        if is_intercompany:
+            inter_company_accounts = line.product_id.product_tmpl_id.\
+                get_product_intercompany_accounts()
+            if type in ('out_invoice', 'out_refund'):
+                data['account_id'] = inter_company_accounts['income'].id
+            else:
+                data['account_id'] = inter_company_accounts['expense'].id
+        return data
