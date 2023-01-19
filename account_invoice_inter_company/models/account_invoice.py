@@ -170,28 +170,20 @@ class AccountInvoice(models.Model):
             raise UserError(_(
                 'Please define %s journal for this company: "%s" (id:%d).')
                 % (dest_journal_type, dest_company.name, dest_company.id))
-        # Use test.Form() class to trigger propper onchanges on the invoice
-        dest_invoice_data = Form(
-            self.env['account.invoice'].with_context(
-                default_type=dest_inv_type,
-                force_company=dest_company.id
-            ))
-        dest_invoice_data.company_id = dest_company
-        dest_invoice_data.partner_id = self.company_id.partner_id
-        dest_invoice_data.name = self.name
-        dest_invoice_data.date_invoice = self.date_invoice
-        dest_invoice_data.reference = self.number
-        dest_invoice_data.comment = self.comment
-        dest_invoice_data.journal_id = dest_journal
-        dest_invoice_data.currency_id = self.currency_id
-        vals = dest_invoice_data._values_to_save(all_fields=True)
-        vals.update({
-            'origin': _('%s - Invoice: %s') % (
-                self.company_id.name, self.number),
-            'auto_invoice_id': self.id,
+        vals = {
+            'company_id': dest_company.id,
+            'type': dest_inv_type,
+            'partner_id': self.company_id.partner_id.id,
+            'name': self.name,
+            'date_invoice': self.date_invoice,
+            'reference': self.number,
             'comment': self.comment,
+            'journal_id': dest_journal.id,
+            'currency_id': self.currency_id.id,
+            'origin': _('%s - Invoice: %s') % (self.company_id.name, self.number),
+            'auto_invoice_id': self.id,
             'auto_generated': True,
-        })
+        }
         return vals
 
     @api.multi
