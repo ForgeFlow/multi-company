@@ -87,7 +87,24 @@ class AccountInvoice(models.Model):
             inter_invoice.move_name = False
             inter_invoice.unlink()
         # create invoice
-        dest_invoice_data = self._prepare_invoice_data(dest_company)
+        dest_invoice_data = {}
+        # line_values_list = []
+        # tax_values_list = []
+        refunded_invoice = self.env["account.invoice"]
+        if self.refund_invoice_id:
+            refunded_invoice = self.refund_invoice_id.mapped("invoice_line_ids.sale_line_ids.order_id.us_intercompany_so.invoice_ids").filtered(
+                lambda i: i.state not in ["draft", "cancel"])[:1]
+        if refunded_invoice:
+            dest_invoice_data = self._prepare_refund(refunded_invoice, date_invoice=refunded_invoice.date_invoice,
+                                                     description=refunded_invoice.name)
+            # line_values_list = [v[2] for v in dest_invoice_data.get('invoice_line_ids', []) if not v[2].get('display_type')]
+            # tax_values_list = [v[2] for v in dest_invoice_data.get('tax_line_ids', [])]
+            del dest_invoice_data['invoice_line_ids']
+            del dest_invoice_data['tax_line_ids']
+            for field_name in ["account_id", "user_id"]:
+                if dest_invoice_data.get(field_name):
+                    del dest_invoice_data[field_name]
+        dest_invoice_data.update(self._prepare_invoice_data(dest_company))
         if force_number:
             dest_invoice_data['move_name'] = force_number
         dest_invoice = self.create(dest_invoice_data)
