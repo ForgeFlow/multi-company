@@ -80,7 +80,7 @@ class AccountInvoice(models.Model):
         inter_invoice = self.search([
             ('auto_invoice_id', '=', self.id),
             ('company_id', '=', dest_company.id)
-        ])
+        ], limit=1)
         force_number = False
         if inter_invoice and inter_invoice.state in ['draft', 'cancel']:
             force_number = inter_invoice.move_name

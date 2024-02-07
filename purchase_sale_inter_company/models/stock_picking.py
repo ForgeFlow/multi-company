@@ -49,9 +49,9 @@ class StockPicking(models.Model):
 
     def button_validate(self):
         is_intercompany = self.env["res.company"].search(
-            [("partner_id", "=", self.partner_id.id)]
+            [("partner_id", "=", self.partner_id.id)], limit=1
         ) or self.env["res.company"].search(
-            [("partner_id", "=", self.partner_id.parent_id.id)]
+            [("partner_id", "=", self.partner_id.parent_id.id)], limit=1
         )
         if is_intercompany and self.company_id.sync_picking \
                 and self.picking_type_code == "outgoing":
