@@ -24,6 +24,13 @@ class StockPicking(models.Model):
             po_picking_pending.intercompany_picking_id = pick.id
             if not pick.intercompany_picking_id and po_picking_pending[0]:
                 pick.intercompany_picking_id = po_picking_pending[0]
+            if (
+                po_picking_pending
+                and not po_picking_pending[
+                    0
+                ].company_id.incoming_shipment_auto_validation
+            ):
+                continue
             for move in pick.move_lines:
                 move_lines = move.move_line_ids.filtered(lambda x: x.qty_done > 0)
                 po_move_pending = move.sale_line_id.auto_purchase_line_id.move_ids.filtered(
