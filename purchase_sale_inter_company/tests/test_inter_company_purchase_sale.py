@@ -4,7 +4,7 @@
 # Copyright 2020 ForgeFlow S.L. (https://www.forgeflow.com)
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 from odoo.exceptions import UserError
-from odoo.tests.common import Form
+from odoo.tests import Form
 
 from odoo.addons.account_invoice_inter_company.tests.test_inter_company_invoice import (
     TestAccountInvoiceInterCompanyBase,
@@ -68,17 +68,24 @@ class TestPurchaseSaleInterCompany(TestAccountInvoiceInterCompanyBase):
         cls.intercompany_sale_user_id.company_ids |= cls.company_a
         cls.company_b.intercompany_sale_user_id = cls.intercompany_sale_user_id
 
+        # Create a generic pricelist
+        pricelist = cls.env["product.pricelist"].create(
+            {
+                "name": "Generic Pricelist USD",
+                "company_id": False,
+                "currency_id": cls.env.ref("base.USD").id,
+            }
+        )
+
+        # Create a test pricelist to use for company A
+        cls.partner_company_a.specific_property_product_pricelist = pricelist
+
         # Configure User
         cls._configure_user(cls.user_company_a)
         cls._configure_user(cls.user_company_b)
 
         # Create purchase order
         cls.purchase_company_a = cls._create_purchase_order(cls.partner_company_b)
-
-        # Configure pricelist to USD
-        cls.env["product.pricelist"].sudo().search([]).write(
-            {"currency_id": cls.env.ref("base.USD").id}
-        )
 
     def _approve_po(self):
         """Confirm the PO in company A and return the related sale of Company B"""
@@ -164,7 +171,7 @@ class TestPurchaseSaleInterCompany(TestAccountInvoiceInterCompanyBase):
     def test_so_change_price(self):
         sale = self._approve_po()
         sale.order_line.price_unit = 10
-        sale.action_confirm()
+        sale._sync_auto_purchase_order_id_price_unit()
         self.assertEqual(self.purchase_company_a.order_line.price_unit, 10)
 
     def test_po_with_contact_as_partner(self):
@@ -184,7 +191,6 @@ class TestPurchaseSaleInterCompany(TestAccountInvoiceInterCompanyBase):
         """
         purchase = self.purchase_company_a
         sale = self._approve_po()
-        sale.action_confirm()
         # Now we add an extra product to the PO and it will show up in the SO
         po_form = Form(purchase)
         with po_form.order_line.new() as line:
@@ -229,7 +235,8 @@ class TestPurchaseSaleInterCompany(TestAccountInvoiceInterCompanyBase):
         purchase = self.purchase_company_a
         sale = self._approve_po()
         # Now, the SO is in Locked state
-        self.assertEqual(sale.state, "done")
+        self.assertEqual(sale.locked, True)
+        self.assertEqual(sale.state, "sale")
         # Without `allow_update_locked_sales` ctx
         with self.assertRaisesRegex(
             UserError,

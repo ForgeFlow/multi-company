@@ -35,7 +35,10 @@ class PurchaseOrderLine(models.Model):
         for order in lines.order_id.filtered(
             lambda x: x.state == "purchase" and x.intercompany_sale_order_id
         ):
-            if order.intercompany_sale_order_id.sudo().state not in allowed_states:
+            if (
+                order.intercompany_sale_order_id.sudo().state,
+                order.intercompany_sale_order_id.sudo().locked,
+            ) not in allowed_states:
                 raise UserError(
                     _(
                         "You can't change this purchase order as the corresponding "
@@ -48,7 +51,9 @@ class PurchaseOrderLine(models.Model):
                 or self.env.user
             )
             sale_lines = []
-            for purchase_line in lines.filtered(lambda x: x.order_id == order):
+            for purchase_line in lines.filtered(
+                lambda x, order=order: x.order_id == order
+            ):
                 sale_lines.append(
                     order._prepare_sale_order_line_data(
                         purchase_line,
@@ -89,7 +94,8 @@ class PurchaseOrderLine(models.Model):
         if not sale_lines:
             return res
         closed_sale_lines = sale_lines.filtered(
-            lambda x: x.state not in self._get_allowed_sale_order_states()
+            lambda x: (x.state, x.order_id.locked)
+            not in self._get_allowed_sale_order_states()
         )
         if closed_sale_lines:
             raise UserError(
@@ -105,7 +111,9 @@ class PurchaseOrderLine(models.Model):
                 {
                     "order_line": [
                         (1, line.id, update_vals)
-                        for line in sale_lines.filtered(lambda x: x.order_id == sale)
+                        for line in sale_lines.filtered(
+                            lambda x, sale=sale: x.order_id == sale
+                        )
                     ]
                 }
             )
@@ -126,7 +134,8 @@ class PurchaseOrderLine(models.Model):
             )
 
     def _get_allowed_sale_order_states(self):
-        allowed_states = ["sale"]
+        """Done state doesn't exist for SO, adding tuple with state and locked."""
+        allowed_states = [("sale", False)]
         if self.env.context.get("allow_update_locked_sales", False):
-            allowed_states.append("done")
+            allowed_states.append(("sale", True))
         return allowed_states
