@@ -270,7 +270,8 @@ class TestPurchaseSaleInterCompany(TestAccountInvoiceInterCompanyBase):
         # https://github.com/OCA/sale-workflow/commit/3fe8ed00c046c9ef68a487eedea282ecb5415231
         with self.assertRaisesRegex(
             UserError,
-            "It is forbidden to modify the following fields in a locked order:\nQuantity",
+            "It is forbidden to modify the following fields in a locked order:\n"
+            "Quantity",
         ):
             purchase.order_line[0].with_context(allow_update_locked_sales=True).write(
                 {"product_qty": 99}
