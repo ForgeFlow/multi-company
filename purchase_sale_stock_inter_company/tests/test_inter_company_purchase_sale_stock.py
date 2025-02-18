@@ -30,6 +30,12 @@ class TestPurchaseSaleStockInterCompany(TestPurchaseSaleInterCompany):
         cls.warehouse_a = cls.env["stock.warehouse"].search(
             [("company_id", "=", cls.company_a.id)]
         )
+        # Before creating warehouse imply group_product_pricelist to avoid triggering
+        # pricelist desactivation on multiwarehouse group checks
+        cls.env.ref("base.group_user").write(
+            {"implied_ids": [(4, cls.env.ref("product.group_product_pricelist").id)]}
+        )
+
         cls.warehouse_b = cls._create_warehouse("CA-WB", cls.company_a)
 
         cls.warehouse_c = cls.env["stock.warehouse"].search(
