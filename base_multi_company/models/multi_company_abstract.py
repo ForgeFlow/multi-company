@@ -3,6 +3,7 @@
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 
 from odoo import api, fields, models
+from odoo.exceptions import AccessError
 
 
 class MultiCompanyAbstract(models.AbstractModel):
@@ -25,6 +26,11 @@ class MultiCompanyAbstract(models.AbstractModel):
     @api.depends_context("company", "_check_company_source_id")
     def _compute_company_id(self):
         for record in self:
+            try:  # Try to read cached value
+                companies = record.company_ids
+            except AccessError:  # Clear cache and retry
+                record.invalidate_recordset(["company_ids"])
+                companies = record.company_ids
             # Set this priority computing the company (if included in the allowed ones)
             # for avoiding multi company incompatibility errors:
             # - If this call is done from method _check_company, the company of the
@@ -35,10 +41,10 @@ class MultiCompanyAbstract(models.AbstractModel):
                 or self.env.context.get("force_company")
                 or self.env.company.id
             )
-            if company_id in record.company_ids.ids:
+            if company_id in companies.ids:
                 record.company_id = company_id
             else:
-                record.company_id = record.company_ids[:1].id
+                record.company_id = companies[:1].id
 
     def _inverse_company_id(self):
         # To allow modifying allowed companies by non-aware base_multi_company
