@@ -10,7 +10,3 @@
 
   * Prabakaran <prabakaran@sodexis.com>
   * Karthik <karthik@sodexis.com>
-
-* `Moduon <https://www.moduon.team/>`__:
-
-  * Jairo Llopis

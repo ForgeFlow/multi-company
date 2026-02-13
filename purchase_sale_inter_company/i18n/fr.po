@@ -9,15 +9,14 @@ msgstr ""
 "Project-Id-Version: Odoo Server 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-08-04 15:47+0000\n"
-"PO-Revision-Date: 2024-11-26 14:51+0000\n"
-"Last-Translator: samibc2c <sami.bouzidi@camptocamp.com>\n"
+"PO-Revision-Date: 2017-10-19 00:51+0000\n"
+"Last-Translator: OCA Transbot <transbot@odoo-community.org>, 2017\n"
 "Language-Team: French (https://www.transifex.com/oca/teams/23907/fr/)\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.6.2\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: purchase_sale_inter_company
 #: model:ir.model,name:purchase_sale_inter_company.model_res_company
@@ -33,7 +32,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase_sale_inter_company.field_res_company__so_from_po
 #: model:ir.model.fields,field_description:purchase_sale_inter_company.field_res_config_settings__so_from_po
 msgid "Create Sale Orders when buying to this company"
-msgstr "Créer un bon de commande lors d'un achat depuis cette société"
+msgstr ""
 
 #. module: purchase_sale_inter_company
 #: model:ir.model.fields,help:purchase_sale_inter_company.field_res_company__so_from_po
@@ -43,45 +42,43 @@ msgid ""
 "created.\n"
 " The intercompany user must at least be Sale User."
 msgstr ""
-"Générer une commande de vente lorsqu'une commande d'achat est créée avec "
-"cette société comme fournisseur.\n"
-" L'utilisateur inter-sociétés doit au moins être Utilisateur Vente."
 
 #. module: purchase_sale_inter_company
 #: model:ir.model.fields,field_description:purchase_sale_inter_company.field_purchase_order_line__intercompany_sale_line_id
 msgid "Intercompany Sale Line"
-msgstr "Ligne de vente Inter société"
+msgstr ""
 
 #. module: purchase_sale_inter_company
 #: model:ir.model.fields,field_description:purchase_sale_inter_company.field_purchase_order__intercompany_sale_order_id
 msgid "Intercompany Sale Order"
-msgstr "Bon de commande inter société"
+msgstr ""
 
 #. module: purchase_sale_inter_company
 #: model:ir.model.fields,field_description:purchase_sale_inter_company.field_res_company__intercompany_sale_user_id
 #: model:ir.model.fields,field_description:purchase_sale_inter_company.field_res_config_settings__intercompany_sale_user_id
 msgid "Intercompany Sale User"
-msgstr "Utilisateur Vente Inter société"
+msgstr ""
 
 #. module: purchase_sale_inter_company
 #: model:ir.model,name:purchase_sale_inter_company.model_account_move
 msgid "Journal Entry"
-msgstr "pièce comptable"
+msgstr ""
 
 #. module: purchase_sale_inter_company
 #: model:ir.model,name:purchase_sale_inter_company.model_purchase_order
 msgid "Purchase Order"
-msgstr "Bon de commande d'achat"
+msgstr "Bon de commande"
 
 #. module: purchase_sale_inter_company
 #: model:ir.model,name:purchase_sale_inter_company.model_purchase_order_line
 msgid "Purchase Order Line"
-msgstr "Ligne de bon de commande d'achat"
+msgstr ""
 
 #. module: purchase_sale_inter_company
 #: model_terms:ir.ui.view,arch_db:purchase_sale_inter_company.res_config_settings_view_form
+#, fuzzy
 msgid "Purchase/Sale"
-msgstr "Achat / Vente"
+msgstr "Achat vers Vente"
 
 #. module: purchase_sale_inter_company
 #: model:ir.model.fields,field_description:purchase_sale_inter_company.field_res_company__sale_auto_validation
@@ -92,12 +89,13 @@ msgstr "Auto Validation des commandes de vente"
 #. module: purchase_sale_inter_company
 #: model_terms:ir.ui.view,arch_db:purchase_sale_inter_company.res_config_settings_view_form
 msgid "Sale from purchase"
-msgstr "Vente depuis Achat"
+msgstr ""
 
 #. module: purchase_sale_inter_company
 #: model:ir.model,name:purchase_sale_inter_company.model_sale_order
+#, fuzzy
 msgid "Sales Order"
-msgstr "Bon de commande de vente"
+msgstr "Commande de ventes"
 
 #. module: purchase_sale_inter_company
 #: model:ir.model,name:purchase_sale_inter_company.model_sale_order_line
@@ -122,15 +120,13 @@ msgid ""
 "The generated sale orders with reference %(orders)s can't be modified. "
 "They're either unconfirmed or locked for modifications."
 msgstr ""
-"Le bon de commande de vente générés ayant comme référence %(orders)s ne peut-"
-"être modifié. Ils sont soit non confirmés, soit verrouillés."
 
 #. module: purchase_sale_inter_company
 #. odoo-python
 #: code:addons/purchase_sale_inter_company/models/account_move.py:0
 #, python-format
 msgid "This vendor bill is related with: {}"
-msgstr "Cette facture d'achat est liée à {}"
+msgstr ""
 
 #. module: purchase_sale_inter_company
 #: model:ir.model.fields,help:purchase_sale_inter_company.field_res_config_settings__intercompany_sale_user_id
@@ -138,8 +134,6 @@ msgid ""
 "User used to create the sales order arising from a purchase order in another "
 "company."
 msgstr ""
-"Utilisateur ayant créé la commande de vente depuis une commande d'achat "
-"d'une autre société."
 
 #. module: purchase_sale_inter_company
 #: model:ir.model.fields,help:purchase_sale_inter_company.field_res_company__sale_auto_validation
@@ -148,7 +142,7 @@ msgid ""
 "When a Sale Order is created by a multi company rule for this company, it "
 "will automatically validate it."
 msgstr ""
-"Quand une commande de vente est créée en mode multi-société pour cette "
+"Quand une commande de vente est créé en mode multi-société pour cette "
 "société, elle sera automatiquement validé."
 
 #. module: purchase_sale_inter_company
@@ -156,7 +150,7 @@ msgstr ""
 #: code:addons/purchase_sale_inter_company/models/purchase_order.py:0
 #, python-format
 msgid "You can't cancel an order that is %s"
-msgstr "Vous ne pouvez pas annuler une commande qui est %s"
+msgstr ""
 
 #. module: purchase_sale_inter_company
 #. odoo-python
@@ -165,8 +159,6 @@ msgstr "Vous ne pouvez pas annuler une commande qui est %s"
 msgid ""
 "You can't change this purchase order as the corresponding sale is %(state)s"
 msgstr ""
-"Vous ne pouvez pas modifier cette commande d'achat car la vente "
-"correspondante est %(state)s"
 
 #. module: purchase_sale_inter_company
 #. odoo-python
@@ -174,16 +166,16 @@ msgstr ""
 #, python-format
 msgid "You cannot create SO from PO because product '%s' is not intercompany"
 msgstr ""
-"Vous ne pouvez pas créer le SO à partir du PO car le produit '%s' n'est pas "
-"multi-société"
+"Vous ne pouvez pas créer la SO à partir de la PO car le produit '%s' n'est "
+"pas multi-société"
 
 #. module: purchase_sale_inter_company
 #. odoo-python
 #: code:addons/purchase_sale_inter_company/models/purchase_order.py:0
-#, python-format
+#, fuzzy, python-format
 msgid ""
 "You cannot create SO from PO because sale price list currency is different "
 "than purchase price list currency."
 msgstr ""
-"Vous ne pouvez pas créer le SO à partir du PO car la devise sur la liste de "
-"prix de vente est différente de la devise sur la liste de prix d'achat."
+"Vous ne pouvez pas créer la SO à partir de la PO car la devise sur la liste "
+"de prix de vente est différente de la devise sur la liste de prix d'achat."
