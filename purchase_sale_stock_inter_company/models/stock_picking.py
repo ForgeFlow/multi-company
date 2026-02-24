@@ -73,5 +73,5 @@ class StockPicking(models.Model):
             po_picks |= pick._set_intercompany_picking_qty(purchase)
         # Transfer dropship pickings
         for po_pick in po_picks.sudo():
-            po_pick.with_company(po_pick.company_id.id)._action_done()
+            po_pick._action_done()
         return super()._action_done()
