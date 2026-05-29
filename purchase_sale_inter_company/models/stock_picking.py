@@ -40,8 +40,8 @@ class StockPicking(models.Model):
                         "There's no corresponding line in PO %s for assigning "
                         "qty from %s for product %s"
                     ) % (purchase.name, pick.name, move_line.product_id.name))
-        # Transfer dropship pickings
-        for po_pick in po_picks.sudo():
+        # Transfer dropship pickings (skip already-done receipts)
+        for po_pick in po_picks.sudo().filtered(lambda p: p.state != 'done'):
             po_pick.with_context(
                 force_company=po_pick.company_id.id,
             ).action_done()
