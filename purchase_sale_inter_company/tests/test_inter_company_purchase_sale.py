@@ -103,7 +103,7 @@ class TestPurchaseSaleInterCompany(common.SavepointCase):
     def xxtest_date_planned(self):
         # Install sale_order_dates module
         module = self.env['ir.module.module'].search(
-            [('name', '=', 'sale_order_dates')])
+            [('name', '=', 'sale_order_dates')], limit=1)
         if not module:
             return False
         module.button_install()

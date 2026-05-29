@@ -19,13 +19,13 @@ class StockBackorderConfirmation(models.TransientModel):
         if picking.picking_type_code == "incoming":
             sale_order = sale_order.sudo().search([(
                 'name', '=', picking.purchase_id.partner_ref
-            )])
+            )], limit=1)
         if not picking or not sale_order:
             return res
         is_intercompany = self.env["res.company"].search(
-            [("partner_id", "=", picking.partner_id.id)]
+            [("partner_id", "=", picking.partner_id.id)], limit=1
         ) or self.env["res.company"].search(
-            [("partner_id", "=", picking.partner_id.parent_id.id)]
+            [("partner_id", "=", picking.partner_id.parent_id.id)], limit=1
         )
         if is_intercompany and is_intercompany.sync_picking \
                 and picking.picking_type_code == "incoming":

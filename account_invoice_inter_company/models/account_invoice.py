@@ -20,7 +20,7 @@ class AccountInvoice(models.Model):
         'account.invoice',
         string='Source Invoice',
         readonly=True, copy=False,
-        prefetch=False)
+        prefetch=False, index=True)
 
     @api.multi
     def _find_company_from_invoice_partner(self):
@@ -80,7 +80,7 @@ class AccountInvoice(models.Model):
         inter_invoice = self.search([
             ('auto_invoice_id', '=', self.id),
             ('company_id', '=', dest_company.id)
-        ])
+        ], limit=1)
         force_number = False
         if inter_invoice and inter_invoice.state in ['draft', 'cancel']:
             force_number = inter_invoice.move_name
@@ -226,7 +226,7 @@ class AccountInvoiceLine(models.Model):
         'account.invoice.line',
         string='Source Invoice Line',
         readonly=True, copy=False,
-        prefetch=False)
+        prefetch=False, index=True)
 
     @api.model
     def _prepare_invoice_line_data(self, dest_invoice, dest_company):

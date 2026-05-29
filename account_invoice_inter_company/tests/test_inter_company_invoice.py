@@ -90,7 +90,7 @@ class TestAccountInvoiceInterCompany(TestAccountInvoiceInterCompanyBase):
         # Check destination invoice created in company B
         invoices = self.invoice_obj.sudo(self.user_company_b.id).search([
             ('auto_invoice_id', '=', self.invoice_company_a.id)
-        ])
+        ], limit=1)
         self.assertNotEquals(invoices, False)
         self.assertEquals(len(invoices), 1)
         if invoices.company_id.invoice_auto_validation:
@@ -122,7 +122,7 @@ class TestAccountInvoiceInterCompany(TestAccountInvoiceInterCompanyBase):
         self.assertEquals(self.invoice_company_a.state, 'open')
         invoices = self.invoice_obj.sudo(self.user_company_b.id).search([
             ('auto_invoice_id', '=', self.invoice_company_a.id)
-        ])
+        ], limit=1)
         self.assertNotEquals(invoices[0].state, 'cancel')
         # Cancel the invoice of company A
         origin = ('%s - Canceled Invoice: %s') % (
@@ -148,7 +148,7 @@ class TestAccountInvoiceInterCompany(TestAccountInvoiceInterCompanyBase):
         # Check destination invoice created in company B
         invoices = self.invoice_obj.sudo(self.user_company_b.id).search([
             ('auto_invoice_id', '=', self.invoice_company_a.id)
-        ])
+        ], limit=1)
         self.assertEqual(len(invoices), 1)
 
     def test_confirm_invoice_with_product_and_shared_catalog(self):
@@ -194,6 +194,6 @@ class TestAccountInvoiceInterCompany(TestAccountInvoiceInterCompanyBase):
         # Check destination invoice created in company B
         invoices = self.invoice_obj.sudo(self.user_company_b.id).search([
             ('auto_invoice_id', '=', self.invoice_company_a.id)
-        ])
+        ], limit=1)
         self.assertEqual(len(invoices), 1)
         return invoices
