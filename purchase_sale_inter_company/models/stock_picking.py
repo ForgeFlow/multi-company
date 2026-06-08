@@ -20,6 +20,14 @@ class StockPicking(models.Model):
             purchase = pick.sale_id.auto_purchase_order_id
             if not purchase:
                 continue
+            # Guard: receipt already completed upstream (e.g. hobbii validates
+            # the INC receipt before calling super). Without this, action_done
+            # would overwrite intercompany_picking_id on ALL PO receipts,
+            # breaking the per-parcel 1:1 link in reship/split flows.
+            if pick.intercompany_picking_id \
+                    and pick.intercompany_picking_id.state == 'done':
+                po_picks |= pick.intercompany_picking_id
+                continue
             purchase.picking_ids.write({'intercompany_picking_id': pick.id})
             for move_line in pick.move_line_ids:
                 qty_done = move_line.qty_done
