@@ -18,3 +18,10 @@ class StockPickingType(models.Model):
         "originating company.\n"
         "* Assign Number Manually: Assign manually in the receipt the lot number to be used.\n",
     )
+    intercompany_sync_returns = fields.Boolean(
+        string="Sync Intercompany Returns",
+        default=True,
+        help="If enabled, creating a return of this delivery automatically creates "
+        "(and at validation time, validates) the matching return of the linked "
+        "intercompany PO receipt.",
+    )

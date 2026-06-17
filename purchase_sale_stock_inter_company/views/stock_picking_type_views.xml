@@ -9,6 +9,10 @@
                     name="intercompany_create_lots_mode"
                     attrs="{'invisible': [('code','!=','outgoing')]}"
                 />
+                <field
+                    name="intercompany_sync_returns"
+                    attrs="{'invisible': [('code','!=','outgoing')]}"
+                />
             </field>
         </field>
     </record>
