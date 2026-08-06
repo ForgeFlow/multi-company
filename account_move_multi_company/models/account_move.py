@@ -45,7 +45,7 @@ class AccountMove(models.Model):
 
     @api.multi
     def post(self, invoice=False):
-        res = super().post(invoice)
+        res = super().post(invoice=invoice)
         dedicated_companies_vals = {}
         journal_entry_transfer = self.env['account.move']
         transfer_lines = []
