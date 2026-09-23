@@ -56,8 +56,10 @@ class StockPicking(models.Model):
                 source_lines = self.move_line_ids.filtered(
                     lambda ml: ml.move_id.sale_line_id == sale_line
                 )
+                # Only incoming moves, never pending returns to the vendor
                 target_moves = sale_line.auto_purchase_line_id.move_ids.filtered(
                     lambda sm: sm.state not in ["draft", "done", "cancel"]
+                    and not sm._is_purchase_return()
                 )
                 yield source_lines, target_moves, sale_line.product_id.name
         elif self.location_dest_id.usage == "supplier":
@@ -69,8 +71,11 @@ class StockPicking(models.Model):
                 so_line = SaleOrderLine.search(
                     [("auto_purchase_line_id", "=", po_line.id)], limit=1
                 )
+                # Only moves of the return linked to this picking, never
+                # pending deliveries of the SO
                 target_moves = so_line.move_ids.filtered(
                     lambda sm: sm.state not in ["draft", "done", "cancel"]
+                    and sm.picking_id.intercompany_picking_id == self
                 )
                 yield source_lines, target_moves, po_line.product_id.name
 

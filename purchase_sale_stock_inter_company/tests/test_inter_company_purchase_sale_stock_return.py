@@ -178,3 +178,40 @@ class TestPurchaseSaleStockInterCompanyReturn(TestPurchaseSaleStockInterCompany)
         sale_picking2.sudo().button_validate()
         self.assertEqual(receipt_open.intercompany_picking_id, sale_picking2)
         self.assertEqual(receipt_done.intercompany_picking_id, sale_picking)
+
+    def test_return_with_open_backorders(self):
+        self.purchase_company_a.order_line.product_qty = 3.0
+        sale = self._approve_po()
+        sale.action_confirm()
+        sale_picking = sale.picking_ids
+        sale_picking.sudo().action_confirm()
+        sale_picking.sudo().action_assign()
+        sale_picking.move_ids.quantity_done = 1.0
+        res_dict = sale_picking.sudo().button_validate()
+        backorder_wizard = Form(
+            self.env[res_dict["res_model"]].with_context(**res_dict["context"])
+        ).save()
+        backorder_wizard.process()
+        sale_backorder = sale.picking_ids - sale_picking
+        receipt_done = self.purchase_company_a.picking_ids.filtered(
+            lambda p: p.state == "done"
+        )
+        receipt_open = self.purchase_company_a.picking_ids - receipt_done
+        self.assertEqual(len(sale_backorder), 1)
+        self.assertEqual(len(receipt_open), 1)
+        co_a_return = self._create_a_return(receipt_done, {self.product: 1.0})
+        co_b_return = (
+            self.env["stock.picking"]
+            .sudo()
+            .search([("intercompany_picking_id", "=", co_a_return.id)])
+        )
+        self.assertEqual(len(co_b_return), 1)
+        co_a_return.move_ids.quantity_done = 1.0
+        co_a_return.sudo().button_validate()
+        self.assertEqual(co_a_return.state, "done")
+        self.assertEqual(co_b_return.state, "done")
+        # Open forward pickings must not be touched by the return sync
+        self.assertNotIn(sale_backorder.state, ("done", "cancel"))
+        self.assertNotIn(receipt_open.state, ("done", "cancel"))
+        self.assertFalse(sum(sale_backorder.move_ids.mapped("quantity_done")))
+        self.assertFalse(sum(receipt_open.move_ids.mapped("quantity_done")))
